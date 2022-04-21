@@ -48,7 +48,7 @@ app.get("/secret", passport.authenticate('jwt',{session: false}), authenticatect
 app.post("/uploadprofiledp",upload.single('profile-file'), imgctrl.uploadpic)
 app.post("/updateprofileimgdb", passport.authenticate('jwt',{session: false}),profilectrl.updateprofileimage)
 app.get("/image/:key",imgctrl.retrieveImg)
-
+app.post("/updateProfile", passport.authenticate('jwt',{session: false}),authenticatectrl.updateUserdetails)
 // app.get('/secret', passport.authenticate('jwt',{session: false}),(req,res,next)=>{
 //   console.log(res)
 //   res.status(200).json("Secret Data")

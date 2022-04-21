@@ -10,8 +10,13 @@ module.exports.updateprofileimage = async(req, res) =>{
     decoded = jwt.verify(authorization, 'TOP_SECRET');
     console.log(decoded)
     var temp = await User.findOneAndUpdate({"_id":decoded.sub}, {"profileUrl":imgname})
-    console.log(temp)
-    res.status(200).json("Hello")
+    if(temp)
+    {
+      res.status(200).json("Profile details updated")
+    }
+    else{
+      res.status(500).json("Error in Updating profile details")
+    }
   }
 
   

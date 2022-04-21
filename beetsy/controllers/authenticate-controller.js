@@ -55,5 +55,22 @@ module.exports.loginuser = async(req, res) =>{
   }
 }
 
+module.exports.updateUserdetails = async(req, res) =>{
+  const {address, city, state, zip, dob, phone, country} = req.body
+  var authorization = req.headers.authorization.split(' ')[1],
+  decoded;
+  decoded = jwt.verify(authorization, 'TOP_SECRET');
+  console.log(decoded)
+  var temp = await User.findOneAndUpdate({"_id":decoded.sub}, {"DOB":dob, "address":address,"state":state, "country":country, "city":city, "phone":phone})
+  if(temp)
+  {
+    res.status(200).json("Picture Updated")
+  }
+  else{
+    res.status(500).json("Error in Updating Picture details")
+  }
+}
+
+
 
  

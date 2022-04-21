@@ -83,6 +83,7 @@ const Login = () =>{
             token: response["data"]["token"],
             userid: response["data"]["foundUser"]["_id"],
             username:response["data"]["foundUser"]["name"],
+            email:response["data"]["foundUser"]["email"],
             isLoggedIn: true
               }))
 
