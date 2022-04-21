@@ -37,7 +37,7 @@ const CheckName = () =>{
         let data = {
             "shopname":shopName
         }
-        axios.post(process.env.REACT_APP_SERVER+'/checkshopname', data)
+        axios.post(process.env.REACT_APP_SERVER+'/checkshopname', data, { headers: {"Authorization" : `Bearer ${loguser.token}`}})
         .then(function (response){
             if(!hasSpecialChar(shopName) && shopName.length>=5 && shopName.length<=15)
             {   
@@ -48,7 +48,8 @@ const CheckName = () =>{
                         "userid":loguser.userid,
                         "username":loguser.username,
                         "isLoggedIn":loguser.isLoggedIn,
-                        "shopname":shopName
+                        "shopname":shopName,
+                        "email":loguser.email
                     }))
                     setSuccessMessage("Congratulations!"+shopName+" is available to create :)")
                     setColorVisibility("green")
@@ -74,7 +75,7 @@ const CheckName = () =>{
 
     const createShopProfile = (e) =>{
         e.preventDefault();
-        axios.post(process.env.REACT_APP_SERVER+'/createshopdetails', {'shopname':shopName, 'ownerid':loguser.userid})
+        axios.post(process.env.REACT_APP_SERVER+'/createshopdetails', {'shopname':shopName},{ headers: {"Authorization" : `Bearer ${loguser.token}`}})
         .then(response=>{
             alert("Shop Profile Creation Successful")
         })

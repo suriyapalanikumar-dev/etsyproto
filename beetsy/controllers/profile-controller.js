@@ -8,7 +8,7 @@ module.exports.updateprofileimage = async(req, res) =>{
     var authorization = req.headers.authorization.split(' ')[1],
     decoded;
     decoded = jwt.verify(authorization, 'TOP_SECRET');
-    console.log(decoded)
+    //console.log(decoded)
     var temp = await User.findOneAndUpdate({"_id":decoded.sub}, {"profileUrl":imgname})
     if(temp)
     {

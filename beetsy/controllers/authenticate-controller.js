@@ -20,7 +20,7 @@ module.exports.secretuser = async(req, res) =>{
   var authorization = req.headers.authorization.split(' ')[1],
             decoded;
   decoded = jwt.verify(authorization, 'TOP_SECRET');
-  console.log(decoded)
+  //console.log(decoded)
   res.status(200).json("success")
 }
                   

@@ -157,7 +157,7 @@ const Dashboard = () => {
     <Navbar/>
       <div style={{  width: "100%", height: "100%" }}>
         <div style={{ width: "100%", height: "50%", float: "left", background: "#ffdbaa" }}>
-          <h2><b>Select the Category to get preview</b></h2>
+          <h2><b>Category Preview</b></h2>
           <Row style={{ paddingLeft: "2%" }}>
             <Col span={2}></Col>
             <Col span={4}>

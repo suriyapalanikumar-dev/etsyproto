@@ -41,6 +41,7 @@ const port =  API_PORT;
 const authenticatectrl = require('./controllers/authenticate-controller.js')
 const imgctrl = require("./controllers/image-controller.js")
 const profilectrl = require('./controllers/profile-controller.js')
+const shopctrl = require('./controllers/shop-controller.js')
 
 app.post("/register", authenticatectrl.registeruser)
 app.post("/login", authenticatectrl.loginuser)
@@ -49,6 +50,10 @@ app.post("/uploadprofiledp",upload.single('profile-file'), imgctrl.uploadpic)
 app.post("/updateprofileimgdb", passport.authenticate('jwt',{session: false}),profilectrl.updateprofileimage)
 app.get("/image/:key",imgctrl.retrieveImg)
 app.post("/updateProfile", passport.authenticate('jwt',{session: false}),authenticatectrl.updateUserdetails)
+app.post("/checkshopname", passport.authenticate('jwt',{session: false}),shopctrl.isshopnameavailabile)
+app.post("/createshopdetails", passport.authenticate('jwt',{session: false}), shopctrl.createshopname)
+app.post("/displayshopdetails", passport.authenticate('jwt',{session: false}),shopctrl.getshopdetails)
+
 // app.get('/secret', passport.authenticate('jwt',{session: false}),(req,res,next)=>{
 //   console.log(res)
 //   res.status(200).json("Secret Data")

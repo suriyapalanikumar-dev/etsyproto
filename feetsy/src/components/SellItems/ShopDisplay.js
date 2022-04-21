@@ -30,25 +30,24 @@ const ShopDisplay = () =>{
     const [shopname, setShopName] = useState(loguser.shopname)
     const [ownername, setOwnerName] = useState("")
     const [owneremail, setownerEmail] = useState("")
-    const [isNotOwner, setNotOwner] = useState(false)
+    const [isOwner, setOwner] = useState(false)
     const [isClick, setisClick] = useState("hidden")
 
     useEffect(() => {
         let data={
-            "shopname" : loguser.shopname,
-            "userid":loguser.userid
+            "shopname" : loguser.shopname
         }
-        axios.post(process.env.REACT_APP_SERVER+"/displayshopdetails",data)
+        axios.post(process.env.REACT_APP_SERVER+"/displayshopdetails",data,{ headers: {"Authorization" : `Bearer ${loguser.token}`}})
         .then(response=>{
-            const resp = response.data["data"]
-            setOwnerName(resp["data"][0]["usernaame"])
-            setownerEmail(resp["data"][0]["email"])
-            if(resp["data"][0]["simgname"])
+            console.log(response)
+            setOwnerName(loguser["username"])
+            setownerEmail(loguser["email"])
+            setOwner(response["data"]["isOwner  "])
+            if(response["data"]["shop"]["shopphoto"]!="")
             {
-                //console.log(process.env.REACT_APP_SERVER+"/image/"+resp["data"][0]["simgname"])
-                setshopdp(process.env.REACT_APP_SERVER+"/image/"+resp["data"][0]["simgname"])
+                
+                setshopdp(process.env.REACT_APP_SERVER+"/image/"+response["data"]["shop"]["shopphoto"])
             }
-
         })
         .catch(function (err){
             //alert(err)
