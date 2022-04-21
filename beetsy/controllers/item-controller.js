@@ -1,5 +1,6 @@
 const connection = require("../config/db")
 const Item = require("../model/item")
+const jwt = require("jsonwebtoken");
 
 module.exports.enrollItem = (req, res) =>{
   try{
@@ -32,25 +33,55 @@ module.exports.enrollItem = (req, res) =>{
 
 }
 
-module.exports.fetchItem = (req,res) =>{
-  const {itemid} = req.body
-  const sql = `SELECT Item.*, User.usernaame FROM dbetsy.Favorites left join dbetsy.Item on Favorites.itemid=Item.itemid left join dbetsy.User on User.userid=Favorites.userid  where Item.itemid=?`
-    const values = [
-       itemid
-    ]
-    connection.query(sql, values, function (error, results, fields) {
-        if (error) {
-          console.log(error);
-          res.status(500).json({
-            message: error.sqlMessage
-          })
-        } else {
-          res.status(200).json({
-            data: results,
-            message: 'Fetched Items Successfully'
-          })
-        }
-    });
-
+module.exports.fetchItem = async(req,res) =>{
+  //console.log(req.params)
+  const shopname = req.params.shopname
+  console.log(shopname)
+  var temp = await Item.find({"shopname":shopname})
+  console.log(temp)
+  if(temp)
+  {
+    var resp = []
+    temp.forEach(i=>{
+      resp.push(i["itemname"])
+    })
+    res.status(200).json(resp)  
+  }
+  else{
+    res.status(500).json("Error in Updating profile details")
+  }
 }
-  
+
+module.exports.updateItem = async(req,res) =>{
+  const {itemname, 
+    itemcount,
+    itemdesc,
+    price} = req.body
+  var temp = await Item.findOne({"itemname":itemname})
+  if(!temp)
+  {
+    res.status(500).json("Please enter an existing item")
+  }
+  if(temp)
+  {
+    let data = {}
+     if(itemcount)
+     {
+       data["itemcount"] = itemcount
+     }
+     if(itemdesc)
+     {
+       data["itemdesc"] = itemdesc
+     }
+     if(price)
+     {
+       data["price"] = price
+     }
+     console.log(data)
+     var temp1 = await Item.findOneAndUpdate({"itemname":itemname},data)
+     res.status(200).json(temp1)
+  }
+  else{
+    res.status(500).json("Error in Updating profile details")
+  }
+}

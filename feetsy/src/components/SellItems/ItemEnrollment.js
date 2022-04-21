@@ -80,15 +80,14 @@ const ItemEnrollment = () =>{
        axios.post(process.env.REACT_APP_SERVER+'/addItem', data)
        .then(function (response){
            //alert("Items Created successfully")
-           setAddName("")
-           setAddcategory("")
-           setAddcategory("")
-           setPrice("")
-           setDesc("")
+           setAddName(()=>"")
+           setAddcategory(null)
+           setAddcategory(null)
+           setPrice(null)
+           setDesc(null)
            setAddImg(null)
            alert("Item Enrollment Successful")
            console.log(response.data)
-
        })
        .catch(function (err){
            alert("Item Enrollment not successful."+err)
