@@ -42,27 +42,22 @@ module.exports.createshopname = (req, res) =>{
     }
 }
 
-module.exports.updateshopimage = (req, res) =>{
-  const {imgname,shopname, userid} = req.body
-    const sql = `update dbetsy.Shop set simgname=? where shopname=? and ownerid=?`
-    const values = [
-        imgname,
-        shopname, 
-        userid
-    ]
-    connection.query(sql, values, function (error, results, fields) {
-        if (error) {
-          console.log(error);
-          res.status(500).json({
-            message: error.sqlMessage
-          })
-        } else {
-          res.status(200).json({
-            data: results,
-            message: 'Image updated Sucessfully'
-          })
-        }
-    });
+module.exports.updateshopimage = async(req, res) =>{
+  try{
+    const {imgname,shopname} = req.body
+    var temp = await Shop.findOneAndUpdate({"shopname":shopname}, {"shopphoto":imgname})
+    if(temp)
+    {
+      res.status(200).json("Profile details updated")
+    }
+    else{
+      res.status(500).json("Error in Updating profile details")
+    }
+  }
+  catch(error)
+  {
+    res.status(500).json({"error":error})
+  }
 }
 
 
@@ -74,9 +69,9 @@ module.exports.getshopdetails = async(req, res) =>{
     decoded;
     decoded = jwt.verify(authorization, 'TOP_SECRET');
     var foundShop = await Shop.findOne({"shopname":shopname})
-    console.log(foundShop)
-    console.log(decoded.sub)
-    console.log(foundShop["ownerID"])
+    // console.log(foundShop)
+    // console.log(decoded.sub)
+    // console.log(foundShop["ownerID"])
     if(foundShop && foundShop["ownerID"]==decoded.sub)
     {
       isowner = true

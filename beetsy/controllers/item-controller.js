@@ -1,42 +1,35 @@
-const connection = require("../config/database.js")
+const connection = require("../config/db")
+const Item = require("../model/item")
 
 module.exports.enrollItem = (req, res) =>{
+  try{
     const {itemname, 
-        itemcount,
-        itemphoto,
-        itemcategory,
-        itemdesc,
-        price,
-        shopname} = req.body
-    const sql = `INSERT INTO dbetsy.Item ( itemname, 
-        itemcount,
-        itemphoto,
-        itemcategory,
-        itemdesc,
-        price,
-        shopname) VALUES(?,?,?,?,?,?,?);`
-    const values = [
-        itemname, 
-        itemcount,
-        itemphoto,
-        itemcategory,
-        itemdesc,
-        price,
-        shopname
-    ]
-    connection.query(sql, values, function (error, results, fields) {
-        if (error) {
-          console.log(error);
-          res.status(500).json({
-            message: error.sqlMessage
-          })
-        } else {
-          res.status(200).json({
-            data: results,
-            message: 'Item Enrolled Sucessfully'
-          })
-        }
-    });
+      itemcount,
+      itemphoto,
+      itemcategory,
+      itemdesc,
+      price,
+      shopname} = req.body
+      let newItem = new Item({"itemname":itemname, "itemcount":itemcount,"itemphoto":itemphoto, "itemcategory":itemcategory,"itemdesc":itemdesc,"price":price,"shopname":shopname})
+      newItem.save()
+      if(newItem)
+      {
+        res.status(200).json({
+          data: "Item Created"
+        })
+      }
+      else{
+        res.status(500).json({
+          data: "Item cannot be created"
+        })
+      }
+  }
+  catch(err){
+    res.status(500).json({
+      data:err
+    })
+  }
+
 }
 
 module.exports.fetchItem = (req,res) =>{

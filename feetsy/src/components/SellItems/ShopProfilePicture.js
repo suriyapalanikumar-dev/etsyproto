@@ -35,6 +35,7 @@ const ShopProfilePicture = () =>{
     const uploadImage = (e) =>{
         e.preventDefault()
         fileUpload(filestore).then((response)=>{
+            console.log(response)
             axios.post(process.env.REACT_APP_SERVER+'/updateshopimgdb', {'shopname':loguser["shopname"], 'userid':loguser["userid"],'imgname':response.data["data"]["Key"]})
             .then(response=>{
                 console.log(response.data)
@@ -42,9 +43,9 @@ const ShopProfilePicture = () =>{
                     "token":loguser.token,
                     "username":loguser.username,
                     "userid": loguser.userid,
+                    "email":loguser.email,
                     "isLoggedIn":loguser.isLoggedIn,
-                    "shopname":loguser.shopname,
-                    "shopimg":process.env.REACT_APP_SERVER+"/image/"+response.data["data"]["Key"]
+                    "shopname":loguser.shopname
                 }))
             })
         })
@@ -54,8 +55,8 @@ const ShopProfilePicture = () =>{
     return (
         <div>
         {/*<form method="POST" action="http://localhost:4001/uploadshopdp" encType="multipart/form-data">*/}
-        <form onSubmit={(e) => console.log(e)}>
-        {/*<form onSubmit={(e) => uploadImage(e)}>*/}
+        {/* <form onSubmit={(e) => console.log(e)}> */}
+        <form onSubmit={(e) => uploadImage(e)}>
         <div>
             <label>Upload profile picture</label>
             <input type="file" name="profile-file" onChange={(e)=>changeFile(e)} required/>

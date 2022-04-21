@@ -42,7 +42,7 @@ const ShopDisplay = () =>{
             console.log(response)
             setOwnerName(loguser["username"])
             setownerEmail(loguser["email"])
-            setOwner(response["data"]["isOwner  "])
+            setOwner(response["data"]["isOwner"])
             if(response["data"]["shop"]["shopphoto"]!="")
             {
                 
@@ -56,7 +56,7 @@ const ShopDisplay = () =>{
     const handleUpload = (e) =>{
         e.preventDefault();
         let data = {"shopname":loguser["shopname"]}
-        setshopdp(shopi)
+        //setshopdp(shopi)
         setmodal3Visible(false)
     }
 
@@ -101,10 +101,10 @@ const ShopDisplay = () =>{
             <Button type="primary"  onClick={(e) =>setmodal3Visible(true)} icon={<EditOutlined /> } >Edit Shop</Button>
 </div> */}
             <div style={{padding:"1%"}}>
-            <Button type="primary" icon={<FileAddOutlined />} onClick={(e)=>addItem(e)} > Add Item </Button>
+            <Button type="primary" icon={<FileAddOutlined />} onClick={(e)=>addItem(e)} disabled={!isOwner}> Add Item </Button>
             </div>
             <div style={{padding:"1%"}}>
-            <Button type="primary" icon={<EditOutlined />} onClick={(e)=>editItem(e)} > Edit Item </Button>
+            <Button type="primary" icon={<EditOutlined />} onClick={(e)=>editItem(e)} disabled={!isOwner}> Edit Item </Button>
             </div>
             <div style={{padding:"1%"}}>
             <Button type="primary" icon={<UnorderedListOutlined />} onClick={(e)=>setisClick("visible")}> View Item Listing </Button>

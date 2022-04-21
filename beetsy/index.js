@@ -42,6 +42,7 @@ const authenticatectrl = require('./controllers/authenticate-controller.js')
 const imgctrl = require("./controllers/image-controller.js")
 const profilectrl = require('./controllers/profile-controller.js')
 const shopctrl = require('./controllers/shop-controller.js')
+const itemctrl = require('./controllers/item-controller.js')
 
 app.post("/register", authenticatectrl.registeruser)
 app.post("/login", authenticatectrl.loginuser)
@@ -53,6 +54,10 @@ app.post("/updateProfile", passport.authenticate('jwt',{session: false}),authent
 app.post("/checkshopname", passport.authenticate('jwt',{session: false}),shopctrl.isshopnameavailabile)
 app.post("/createshopdetails", passport.authenticate('jwt',{session: false}), shopctrl.createshopname)
 app.post("/displayshopdetails", passport.authenticate('jwt',{session: false}),shopctrl.getshopdetails)
+app.post("/uploadshopdp",upload.single('profile-file'), imgctrl.uploadpic)
+app.post("/updateshopimgdb", shopctrl.updateshopimage)
+app.post("/additem",itemctrl.enrollItem)
+app.post("/uploaditemdp",upload.single('profile-file'), imgctrl.uploadpic)
 
 // app.get('/secret', passport.authenticate('jwt',{session: false}),(req,res,next)=>{
 //   console.log(res)

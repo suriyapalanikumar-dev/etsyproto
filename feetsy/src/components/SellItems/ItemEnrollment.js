@@ -20,8 +20,23 @@ const ItemEnrollment = () =>{
     const [addprice, setPrice] = useState("")
     const [adddesc, setDesc] = useState("")
     const [addimg, setAddImg] = useState(null)
+    const [newcat, disnewcat] = useState(true)
+    const [itemstore, setItemStoreFile] = useState(null)
+
     const handleCategory = (e) =>{
-       setAddcategory(e)
+        if(e!="New Category")
+        {
+            setAddcategory(e)
+        }
+        else{
+            disnewcat(false)
+        }
+       
+    }
+
+    const changeFileItem = (e) =>{
+        let data = e.target.files[0]
+        setItemStoreFile(e.target.files[0])
     }
 
     const changeItemFile = (e) =>{
@@ -30,7 +45,7 @@ const ItemEnrollment = () =>{
     }
 
     const fileUploadItem = (file) =>{
-        const url = process.env.REACT_APP_SERVER+'/uploadshopdp';
+        const url = process.env.REACT_APP_SERVER+'/uploaditemdp';
         const formData = new FormData();
         formData.append('profile-file',file)
         const config = {
@@ -43,49 +58,51 @@ const ItemEnrollment = () =>{
 
     const updatePath =(e) =>{
         e.preventDefault()
-        fileUploadItem(addimg).then((response)=>{
+        fileUploadItem(itemstore).then((response)=>{
             setAddImg(response.data["data"]["Key"])
         })
     }
 
     const enrollItem = (e) =>
     {
-        alert("Item Enrolled Successfully")
-      // e.preventDefault();
-    //    let data = {
-    //        "itemname" : addname,
-    //        "itemcount": addquantity,
-    //        "itemphoto": addimg,
-    //        "itemcategory":addcategory,
-    //        "itemdesc":adddesc,
-    //        "price":addprice,
-    //        "shopname":loguser["shopname"]
-    //    }
-    //    axios.post(process.env.REACT_APP_SERVER+'/addItem', data)
-    //    .then(function (response){
-    //        setAddName("")
-    //        setAddcategory("")
-    //        setAddcategory("")
-    //        setPrice("")
-    //        setDesc("")
-    //        setAddImg(null)
-    //        alert("Item Enrollment Successful")
-    //        console.log(response.data)
+        //alert("Item Enrolled Successfully")
+      e.preventDefault();
+       let data = {
+           "itemname" : addname,
+           "itemcount": addquantity,
+           "itemphoto": addimg,
+           "itemcategory":addcategory,
+           "itemdesc":adddesc,
+           "price":addprice,
+           "shopname":loguser["shopname"]
+       }
+       console.log(data)
+       axios.post(process.env.REACT_APP_SERVER+'/addItem', data)
+       .then(function (response){
+           //alert("Items Created successfully")
+           setAddName("")
+           setAddcategory("")
+           setAddcategory("")
+           setPrice("")
+           setDesc("")
+           setAddImg(null)
+           alert("Item Enrollment Successful")
+           console.log(response.data)
 
-    //    })
-    //    .catch(function (err){
-    //        alert("Item Enrollment not successful."+err)
-    //    })   
+       })
+       .catch(function (err){
+           alert("Item Enrollment not successful."+err)
+       })   
 
     }
     return (
         <div>
             <h2><b>Add Items</b></h2>
             <label>Name</label>
-            <Input size="large" placeholder="large size" placeholder="Enter Item name" onChange={(e)=>setAddName(e.target.value)}/>
+            <Input size="large" placeholder="Enter Item name" onChange={(e)=>setAddName(e.target.value)}/>
             <br/>
             <label>Quantity Available</label>
-            <Input size="large" placeholder="large size" placeholder="Enter quantity" onChange={(e)=>setQuantity(e.target.value)}/>
+            <Input size="large" placeholder="Enter quantity" onChange={(e)=>setQuantity(e.target.value)}/>
             <br/>
             <label>Category</label>
             <br/>
@@ -114,24 +131,33 @@ const ItemEnrollment = () =>{
                 </Select>
             </Col>
             <Col span = {12}>
-                <Input size="large" placeholder="large size" placeholder="Enter new Category"/>
+                <Input size="large" disabled={newcat} placeholder="Enter new Category" onChange={(e)=>setAddcategory(e.target.value)}/>
             </Col>
             </Row>
             <label>Description</label>
             <TextArea rows={4} onChange={(e)=>setDesc(e.target.value)} />
             <br/>
             <label>Price per Item</label>
-            <Input size="large" placeholder="large size" placeholder="Enter Price" onChange={(e)=>setPrice(e.target.value)}/>
+            <Input size="large"  placeholder="Enter Price" onChange={(e)=>setPrice(e.target.value)}/>
             <br/>
             <br/>
             <div>
-            <form onSubmit={(e) => updatePath(e)}>
+            {/* <form onSubmit={(e) => updatePath(e)}>
             <div>
                 <label>Upload Item picture: </label>
                 <input type="file" name="profile-file" required/>
             </div>
             <div>
                 <input type="submit" value="Upload"/>
+            </div>
+            </form> */}
+            <form onSubmit={(e) => updatePath(e)}>
+            <div>
+                <label>Upload profile picture</label>
+                <input type="file" name="profile-file" onChange={(e)=>changeFileItem(e)} required/>
+            </div>
+            <div>
+                <input type="submit" value="Upload" />
             </div>
             </form>
             </div>
