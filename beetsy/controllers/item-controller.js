@@ -85,3 +85,14 @@ module.exports.updateItem = async(req,res) =>{
     res.status(500).json("Error in Updating profile details")
   }
 }
+
+module.exports.getallItems = async(req, res) =>{
+  try{
+    var temp = await Item.find({},{"_id":1, "itemname":1, "isFavorite":1, "price":1,"itemphoto":1}).sort([['createdAt', -1]])
+    res.status(200).json(temp)
+  }
+  catch(err)
+  {
+    res.status(500).json("Error in fetching items")
+  }
+}

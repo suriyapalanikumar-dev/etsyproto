@@ -29,6 +29,7 @@ const Dashboard = () => {
   const [isFavorite, setisFavorite] = useState(false)
   const [isnavigateOverview, setNavigateOverview] = useState(false)
   const [itemdetails, setItemDetails] = useState(null)
+  const [itemlist, setItemList] = useState([])
   const [money, setMoney] = useState("USD")
   const dispatch = useDispatch();
   const loguser = useSelector(authenticateUser)
@@ -36,6 +37,11 @@ const Dashboard = () => {
   // useEffect = (() =>{
   //   getItemDetails({"category":categorySelected});
   // })
+  useEffect(() => {
+
+    getItemDetails();
+  }, []);
+
   const handleChange = (value) =>{
     if(!loguser)
     {
@@ -57,18 +63,10 @@ const Dashboard = () => {
 
     //setMoney(value)
   }
-  const getItemDetails = (data) => {
-    
-    axios.post(process.env.REACT_APP_SERVER + "/fetchItems", data)
+  const getItemDetails = () => {
+    axios.get(process.env.REACT_APP_SERVER + "/displayItems")
       .then(response => {
-        var temp = response.data
-        setCard1name(temp["data"][0]["itemname"])
-        setCard1price(temp["data"][0]["price"])
-        setCard1Image(process.env.REACT_APP_SERVER + "/image/" + temp["data"][0]["itemphoto"])
-        setCard1Id(temp["data"][0]["itemid"])
-        //console.log(temp["data"])
-        setItemDetails(temp["data"])
-
+        setItemList(response.data)
       })
       .catch(function (err) {
         alert(err)
@@ -216,6 +214,32 @@ const Dashboard = () => {
         <div style={{ marginTop: "2%", width: "100%", height: "50%", float: "left", paddingLeft:"2px" }}>
           <h2><b> Collection Preview</b></h2>
           <Row>
+            {itemlist.map((element) => <Col span={6} style={{paddingLeft:"2%"}}>
+              <Card
+                hoverable
+                style={{ width: "75%", height: "50%" }}
+                cover={<img alt="example" src={process.env.REACT_APP_SERVER+"/image/"+element.itemphoto} />}
+                
+              >
+                <div>
+                  <Row>
+                    <Col span={21}>
+                      <p align="center" style={{fontSize:"15px"}}><b>{element.itemname}</b></p>
+                      <p style={{ visibility: "hidden" }}>{element._id}</p>
+
+                    </Col>
+                    <Col span={3}>
+                      {
+                        element.isFavorite=='yes' ? <HeartFilled /> : <HeartOutlined  />
+                      }
+                    </Col>
+                  </Row>
+                </div>
+                <p><b><span>{money}</span><span>{element.price} </span></b></p>
+              </Card>
+            </Col>)}
+          </Row>
+          {/* <Row>
             <Col span={6} style={{paddingLeft:"2%"}}>
               <Card
                 hoverable
@@ -247,7 +271,7 @@ const Dashboard = () => {
               hoverable
               style={{ width: "75%", height: "50%" }}
               cover={<img alt="example" src={process.env.REACT_APP_SERVER+"/image/"+'1647805223561-art2.jpg'} onClick={(e) => navigateOverview(3)}/>}
-              
+    
             >
               <div>
                 <Row>
@@ -321,117 +345,8 @@ const Dashboard = () => {
         </Card>
       </Col>
 
-          </Row>
-          <Row>
-          <Col span={6} style={{paddingLeft:"2%"}}>
-          <Card
-            hoverable
-            style={{ width: "75%", height: "50%" }}
-            cover={<img alt="example" src={process.env.REACT_APP_SERVER+"/image/"+'1647805723209-decor3.jpg'} onClick={(e) => navigateOverview(6)}/>}
-            
-          >
-            <div>
-              <Row>
-                <Col span={21}>
-                  <p>
-                    <span>Headphones</span>
-                    <span style={{ visibility: "hidden" }}>6</span>
-                  </p>
-  
-                </Col>
-                <Col span={3}>
-                  {
-                    isFavorite ? <HeartFilled /> : <HeartOutlined onClick={(e) => setFavorite(6)} />
-                  }
-                </Col>
-              </Row>
-            </div>
-            <p><b><span>USD </span><span>30 </span></b></p>
-          </Card>
-        </Col>
-
-        <Col span={6} style={{paddingLeft:"2%"}}>
-        <Card
-          hoverable
-          style={{ width: "75%", height: "50%" }}
-          cover={<img alt="example" src={process.env.REACT_APP_SERVER+"/image/"+'1647805784635-electronic1.jpg'} onClick={(e) => navigateOverview(7)}/>}
+          </Row> */}
           
-        >
-          <div>
-            <Row>
-              <Col span={21}>
-                <p>
-                  <span>Antic Decor</span>
-                  <span style={{ visibility: "hidden" }}>7</span>
-                </p>
-
-              </Col>
-              <Col span={3}>
-                {
-                  isFavorite ? <HeartFilled /> : <HeartOutlined onClick={(e) => setFavorite(7)} />
-                }
-              </Col>
-            </Row>
-          </div>
-          <p><b><span>USD </span><span>40 </span></b></p>
-        </Card>
-      </Col>
-
-      <Col span={6} style={{paddingLeft:"2%"}}>
-      <Card
-        hoverable
-        style={{ width: "75%", height: "50%" }}
-        cover={<img alt="example" src={process.env.REACT_APP_SERVER+"/image/"+'1647805935918-electronic2.jpg'} onClick={(e) => navigateOverview(8)}/>}
-        
-      >
-        <div>
-          <Row>
-            <Col span={21}>
-              <p>
-                <span>Mobile Phone</span>
-                <span style={{ visibility: "hidden" }}>8</span>
-              </p>
-
-            </Col>
-            <Col span={3}>
-              {
-                isFavorite ? <HeartFilled /> : <HeartOutlined onClick={(e) => setFavorite(8)} />
-              }
-            </Col>
-          </Row>
-        </div>
-        <p><b><span>USD </span><span>300 </span></b></p>
-      </Card>
-    </Col>
-
-
-    <Col span={6} style={{paddingLeft:"2%"}}>
-    <Card
-      hoverable
-      style={{ width: "75%", height: "50%" }}
-      cover={<img alt="example" src={process.env.REACT_APP_SERVER+"/image/"+'1647805985867-jewel1.jpg'} onClick={(e) => navigateOverview(9)}/>}
-      
-    >
-      <div>
-        <Row>
-          <Col span={21}>
-            <p>
-              <span>Mobile Phone</span>
-              <span style={{ visibility: "hidden" }}>9</span>
-            </p>
-
-          </Col>
-          <Col span={3}>
-            {
-              isFavorite ? <HeartFilled /> : <HeartOutlined onClick={(e) => setFavorite(9)} />
-            }
-          </Col>
-        </Row>
-      </div>
-      <p><b><span>USD </span><span>450 </span></b></p>
-    </Card>
-  </Col>
-</Row>
         </div>
       </div>
       <div style={{

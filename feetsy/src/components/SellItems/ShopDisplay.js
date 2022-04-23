@@ -14,9 +14,11 @@ import noimage from "../../images/noimage.png";
 import shopi from "../../images/shop1.jpg";
 import { useDispatch,useSelector } from 'react-redux';
 import { register } from '../../features/userSlice';
-import { authenticateUser, login, logout, shopSelect } from '../../features/userSlice';
+import { authenticateUser, login, logout, shopSelect, shopDisplay } from '../../features/userSlice';
 import Navbar  from '../Navbar/Navbar';
-
+import { useTable } from 'react-table';
+import ReactTable from "react-table-6";  
+import "react-table-6/react-table.css";
 
 const {Meta} = Card;
 
@@ -33,13 +35,37 @@ const ShopDisplay = () =>{
     const [isOwner, setOwner] = useState(false)
     const [isClick, setisClick] = useState("hidden")
 
+    const columns = [{  
+        Header: 'Name',  
+        accessor: 'Name'  
+        },{  
+        Header: 'Category',  
+        accessor: 'Category'  
+        },
+        {
+        Header: 'Price',  
+        accessor: 'Price' 
+        },
+        {
+        Header: 'Sold',  
+        accessor: 'Sold',
+        show:false  
+        }]
+
     useEffect(() => {
         let data={
             "shopname" : loguser.shopname
         }
         axios.post(process.env.REACT_APP_SERVER+"/displayshopdetails",data,{ headers: {"Authorization" : `Bearer ${loguser.token}`}})
         .then(response=>{
-            console.log(response)
+            // dispatch(shopSelect({
+            //     "token" :loguser.token,
+            //     "username":loguser.username,
+            //     "shopname":loguser.shopName,
+            //     "email":loguser.email,
+            //     "isOwner":response["data"]["isOwner"]
+            // }))
+            //console.log(response)
             setOwnerName(loguser["username"])
             setownerEmail(loguser["email"])
             setOwner(response["data"]["isOwner"])
@@ -120,7 +146,12 @@ const ShopDisplay = () =>{
         </Row>
         <div style={{visibility:isClick}}>
         <p>Item Listing:</p>
-        <ItemDisplayAdmin/>
+        {/* <ItemDisplayAdmin/> */}
+        <ReactTable  
+            columns={columns}  
+            defaultPageSize = {2}  
+            pageSizeOptions = {[2,4, 6]}  
+        /> 
         </div>
         <Modal
         visible={modal3Visible}

@@ -60,6 +60,7 @@ app.post("/additem",itemctrl.enrollItem)
 app.post("/uploaditemdp",upload.single('profile-file'), imgctrl.uploadpic)
 app.get("/getuniqueItems/:shopname", itemctrl.fetchItem)
 app.post("/editItem", itemctrl.updateItem)
+app.get("/displayItems", itemctrl.getallItems)
 // app.get('/secret', passport.authenticate('jwt',{session: false}),(req,res,next)=>{
 //   console.log(res)
 //   res.status(200).json("Secret Data")

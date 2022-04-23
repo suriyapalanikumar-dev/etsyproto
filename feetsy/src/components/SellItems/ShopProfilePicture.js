@@ -7,7 +7,7 @@ import axios, {post} from 'axios';
 //import { changeConfirmLocale } from 'antd/lib/modal/locale';
 import { useDispatch,useSelector } from 'react-redux';
 import { register } from '../../features/userSlice';
-import { authenticateUser, login, logout, shopSelect, shopImg} from '../../features/userSlice';
+import { authenticateUser, shopImg} from '../../features/userSlice';
 import noimage from "../../images/noimage.png";
 
 
@@ -45,7 +45,8 @@ const ShopProfilePicture = () =>{
                     "userid": loguser.userid,
                     "email":loguser.email,
                     "isLoggedIn":loguser.isLoggedIn,
-                    "shopname":loguser.shopname
+                    "shopname":loguser.shopname,
+                    "isOwner":loguser.isOwner
                 }))
             })
         })
