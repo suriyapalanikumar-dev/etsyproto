@@ -15,9 +15,6 @@ import {
 
 const {Search} = Input;
 const Enhancements = () =>{
-
-  
-
     return (
         <div>
         <Navbar/>

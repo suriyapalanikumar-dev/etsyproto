@@ -29,6 +29,7 @@ const Fav = () =>{
           }
           else{
             alert("Object Check")
+            console.log(response.data)
             //setItemsAll(response.data)
           }
         })
@@ -49,7 +50,7 @@ const Fav = () =>{
           {/* <h2><b> Collection Preview</b></h2> */}
 
           <Row>
-            {itemsall.map((element) => <Col span={6} style={{paddingLeft:"2%"}}>
+            {/* {itemsall.map((element) => <Col span={6} style={{paddingLeft:"2%"}}>
               <Card
                 hoverable
                 style={{ width: "75%", height: "50%" }}
@@ -60,7 +61,7 @@ const Fav = () =>{
                   <Row>
                     <Col span={21}>
                       <p align="center" style={{fontSize:"15px"}}><b>{element.itemname}</b></p>
-                      {/* <p style={{ visibility: "hidden" }}>{element._id}</p> */}
+                
                       <p style={{ visibility: "hidden" }}>{element._id}</p>
 
                     </Col>
@@ -73,7 +74,7 @@ const Fav = () =>{
                 </div>
                 <p><b><span>{loguser.dollar}</span><span> {element.price} </span></b></p>
               </Card>
-            </Col>)}
+            </Col>)} */}
           </Row>
           </div>
         </div>

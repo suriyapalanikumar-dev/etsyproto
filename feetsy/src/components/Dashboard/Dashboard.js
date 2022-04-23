@@ -15,7 +15,7 @@ import {
 import Navbar from "../Navbar/Navbar";
 import { useDispatch,useSelector } from 'react-redux';
 import { register } from '../../features/userSlice';
-import { authenticateUser, login, logout, dollarSelect,itemSelect, dollarInitial } from '../../features/userSlice';
+import { authenticateUser, login, logout, dollarSelect,itemSelect, dollarInitial,itemCOnsidered } from '../../features/userSlice';
 
 const { Meta } = Card;
 const {Option} = Select;
@@ -145,6 +145,7 @@ const Dashboard = () => {
       "username" : loguser.username,
       "userid" : loguser.userid,
       "token":loguser.token,
+      "email":loguser.email,
       "isLoggedIn":loguser.isLoggedIn,
       "dollar":d
     }
@@ -188,8 +189,12 @@ const Dashboard = () => {
     }
   }
 
+  const displayItemdetails = (e)=>{
+    setNavigateOverview(true)
+  }
+
   if (isnavigateOverview) {
-    return <Navigate replace to="/shopoverview" />
+    return <Navigate replace to="/summaryoverview" />
   }
 
 
@@ -262,6 +267,7 @@ const Dashboard = () => {
                 hoverable
                 style={{ width: "75%", height: "50%" }}
                 cover={<img alt="example" src={process.env.REACT_APP_SERVER+"/image/"+element.itemphoto} />}
+                onClick = {(e)=>displayItemdetails(element._id)}
                 
               >
                 <div>

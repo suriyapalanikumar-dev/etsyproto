@@ -43,11 +43,13 @@ module.exports.registeruser = async(req, res) =>{
 
 module.exports.loginuser = async(req, res) =>{
   const { email, password } = req.body;
-  
   //Check If User Exists
   let foundUser = await User.findOne({ email });
+  console.log(password)
+  console.log(foundUser.password)
   if(await foundUser.matchPassword(password))
   {
+    console.log("matched")
     let token = genToken(foundUser)
     console.log(typeof foundUser)
     console.log(foundUser)
