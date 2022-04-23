@@ -15,7 +15,7 @@ import {
 import Navbar from "../Navbar/Navbar";
 import { useDispatch,useSelector } from 'react-redux';
 import { register } from '../../features/userSlice';
-import { authenticateUser, login, logout, dollarSelect,itemSelect } from '../../features/userSlice';
+import { authenticateUser, login, logout, dollarSelect,itemSelect, dollarInitial } from '../../features/userSlice';
 
 const { Meta } = Card;
 const {Option} = Select;
@@ -53,6 +53,7 @@ const Dashboard = () => {
         "userid" : loguser.userid,
         "token":loguser.token,
         "isLoggedIn":loguser.isLoggedIn,
+        "email":loguser.email,
         "dollar":value
       }
       setMoney(value)
@@ -64,8 +65,32 @@ const Dashboard = () => {
     //setMoney(value)
   }
   const getItemDetails = () => {
+    let data;
+    if(loguser)
+    {
+      let data = {
+        "username" : loguser.username,
+        "userid" : loguser.userid,
+        "token":loguser.token,
+        "isLoggedIn":loguser.isLoggedIn,
+        "email":loguser.email,
+        "dollar":money
+      }
+      dispatch(dollarSelect(data))
+    }
+    else{
+      let data = {
+        "dollar":money
+      }
+      dispatch(dollarInitial(data))
+    }
     axios.get(process.env.REACT_APP_SERVER + "/displayItems")
       .then(response => {
+        console.log(loguser)
+        let data = {
+          "dollar":money
+        }
+        //dispatch(dollarSelect(data))
         setItemList(response.data)
       })
       .catch(function (err) {
@@ -143,6 +168,24 @@ const Dashboard = () => {
       )
     }
       setNavigateOverview(true)
+  }
+
+  const makeFavorite = (e) =>{
+    if(!loguser)
+    {
+      alert("Please log in to make favorites")
+    }
+    else{
+      //console.log(loguser.token)
+      axios.post(process.env.REACT_APP_SERVER + "/makeFavorite",{"itemid":e},{headers: {"Authorization" : `Bearer ${loguser.token}`} })
+      .then(response => {
+        alert("Marked as Favorite")
+      })
+      .catch(function (err) {
+        alert(err)
+        console.log(err)
+      })
+    }
   }
 
   if (isnavigateOverview) {
@@ -225,17 +268,18 @@ const Dashboard = () => {
                   <Row>
                     <Col span={21}>
                       <p align="center" style={{fontSize:"15px"}}><b>{element.itemname}</b></p>
+                      {/* <p style={{ visibility: "hidden" }}>{element._id}</p> */}
                       <p style={{ visibility: "hidden" }}>{element._id}</p>
 
                     </Col>
                     <Col span={3}>
                       {
-                        element.isFavorite=='yes' ? <HeartFilled /> : <HeartOutlined  />
+                        element.isFavorite=='yes' ? <HeartFilled  /> : <HeartOutlined  onClick={(e)=>makeFavorite(element._id)}  />
                       }
                     </Col>
                   </Row>
                 </div>
-                <p><b><span>{money}</span><span>{element.price} </span></b></p>
+                <p><b><span>{money}</span><span> {element.price} </span></b></p>
               </Card>
             </Col>)}
           </Row>

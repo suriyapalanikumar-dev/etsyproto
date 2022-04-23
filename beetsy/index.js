@@ -61,10 +61,10 @@ app.post("/uploaditemdp",upload.single('profile-file'), imgctrl.uploadpic)
 app.get("/getuniqueItems/:shopname", itemctrl.fetchItem)
 app.post("/editItem", itemctrl.updateItem)
 app.get("/displayItems", itemctrl.getallItems)
-// app.get('/secret', passport.authenticate('jwt',{session: false}),(req,res,next)=>{
-//   console.log(res)
-//   res.status(200).json("Secret Data")
-// })
+app.post("/makeFavorite",passport.authenticate('jwt',{session: false}), itemctrl.setFavorite)
+app.post("/deleteFavorite", passport.authenticate('jwt',{session: false}),itemctrl.removeFavorite)
+app.get("/getFavorite", passport.authenticate('jwt',{session: false}),itemctrl.fetchFavorite)
+
 
 
 //server listening 

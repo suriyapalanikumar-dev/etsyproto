@@ -1,5 +1,6 @@
 const connection = require("../config/db")
 const Item = require("../model/item")
+const User = require("../model/user")
 const jwt = require("jsonwebtoken");
 
 module.exports.enrollItem = (req, res) =>{
@@ -94,5 +95,74 @@ module.exports.getallItems = async(req, res) =>{
   catch(err)
   {
     res.status(500).json("Error in fetching items")
+  }
+}
+
+module.exports.setFavorite = async(req, res)=>{
+  try{
+    const {itemid} = req.body
+    var authorization = req.headers.authorization.split(' ')[1],
+    decoded;
+    decoded = jwt.verify(authorization, 'TOP_SECRET');
+    var temp = await User.findOne({"_id":decoded.sub})
+    if(temp)
+    {
+      temp["favorites"].push(itemid)
+      temp.save()
+      res.status(200).json("Favorites set")
+    }
+    else{
+      res.status(200).json("Favorites cannot be set")
+    }
+  }
+  catch(err)
+  {
+    res.status(500).json(err)
+  }
+}
+
+module.exports.removeFavorite = async(req, res)=>{
+  try{
+    const {itemid} = req.body
+    var authorization = req.headers.authorization.split(' ')[1],
+    decoded;
+    decoded = jwt.verify(authorization, 'TOP_SECRET');
+    var temp = await Item.findOneAndUpdate({"_id":itemid},{"isFavorite":"No"})
+    if(temp)
+    {
+      res.status(200).json("Favorites Removed")
+    }
+    else{
+      res.status(500).json("Favorites cannot be removed")
+    }
+  }
+  catch(err)
+  {
+    res.status(500).json(err)
+  }
+}
+
+
+module.exports.fetchFavorite = async(req, res)=>{
+  try{
+
+    var authorization = req.headers.authorization.split(' ')[1],
+    decoded;
+    decoded = jwt.verify(authorization, 'TOP_SECRET');
+    var temp = await User.findOne({"_id":decoded.sub})
+    console.log(temp)
+    if(temp["favorites"].length>0)
+    {
+      //console.log("jdk")
+      var temp1 = await Item.find({ '_id': { $in: temp["favorites"] } });
+      res.status(200).json({temp1})
+    }
+    else{
+      res.status(200).json("No favorites")
+    }
+  }
+  catch(err)
+  {
+    res.status(500).json(err)
   }
 }

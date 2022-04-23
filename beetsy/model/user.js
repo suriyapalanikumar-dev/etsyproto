@@ -36,6 +36,9 @@ const UserSchema = new mongoose.Schema({
         maxlength: [100, "About information can not be more than 100 characters"],
         default:''
     },
+    favorites:{
+        type:[String],
+    },
     createdAt:{
         type: Date,
         default:Date.now
