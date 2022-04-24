@@ -43,7 +43,13 @@ const Cart = () =>
           console.log(err)
         })
     }
-     
+    const checkout = () =>{
+      axios.post(process.env.REACT_APP_SERVER + "/proceedCheckout",{},{ headers: {"Authorization" : `Bearer ${loguser.token}`} })
+      .then(response => {
+        console.log(response.data)
+        alert("Order Placed. Order ID is "+response.data)
+      })
+    }
     const saveCart=(itemid,e)=>{
         
         axios.post(process.env.REACT_APP_SERVER + "/saveCart",{"itemid":itemid, "sellvalue":3},{ headers: {"Authorization" : `Bearer ${loguser.token}`} })
@@ -136,7 +142,7 @@ const Cart = () =>
             </div>     
             <br/>
             <h4><b>Your total order value is {ordervalue}</b></h4>
-            <Button size="large" type="primary">Proceed to Checkout</Button>           
+            <Button size="large" type="primary" onClick={(e)=>checkout(e)}>Proceed to Checkout</Button>           
             </div>       
     )  
 

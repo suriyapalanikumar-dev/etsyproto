@@ -2,6 +2,7 @@ const connection = require("../config/db")
 const Item = require("../model/item")
 const User = require("../model/user")
 const jwt = require("jsonwebtoken");
+const Purchase = require("../model/purchase")
 
 module.exports.enrollItem = (req, res) =>{
   try{
@@ -51,6 +52,32 @@ module.exports.fetchItem = async(req,res) =>{
   else{
     res.status(500).json("Error in Updating profile details")
   }
+}
+
+module.exports.checkout = async(req, res)=>{
+  var authorization = req.headers.authorization.split(' ')[1],
+  decoded;
+  decoded = jwt.verify(authorization, 'TOP_SECRET');
+  var temp = await User.findOne({"_id":decoded.sub})
+  var ta = temp["purchases"]
+  var temp1 = await Item.find({ '_id': { $in: temp["cart"] } });
+  var p = []
+  //console.log(temp1)
+  temp1.forEach(element => {
+      p.push(element["price"])
+  });
+  //console.log(p)
+  var temp2 = await new Purchase({"itemids":temp["cart"], "gift":temp["giftdesc"], "quantity":temp["count"],"price":p})
+  temp2.save()
+  var temparr = ta.push(temp2["_id"])
+  console.log("_____")
+  console.log(ta)
+  // // console.log(temp)
+  // // console.log(temp["purchases"])
+  // console.log(temparr)
+  var temp3 = await User.findOneAndUpdate({"_id":decoded.sub},{"cart":[],"giftdesc":[],"count":[], "purchases":ta})
+  // console.log(temp2)
+  res.status(200).json(temp2["_id"]) 
 }
 
 module.exports.updateItem = async(req,res) =>{
@@ -315,4 +342,30 @@ module.exports.saveDesc = async(req, res) =>{
   else{
     res.status(500).json("Cannot add gift desc to cart")
   }
+}
+
+module.exports.purchaseitems = async(req, res) =>{
+  // const {pagevalue} = req.body
+  var authorization = req.headers.authorization.split(' ')[1],
+  decoded;
+  decoded = jwt.verify(authorization, 'TOP_SECRET'); 
+  var temp = await User.findOne({"_id":decoded.sub})
+  var temp1 = await Purchase.find({ '_id': { $in: temp["purchases"] } }).sort([['createdAt', -1]]);
+  var collectids = []
+  var map_date = {}
+  var map_id = {}
+  temp1.forEach(element => {
+    
+    collectids = [...collectids, ...element["itemids"]]
+    element["itemids"].forEach(e => {
+        map_date[e] = element["createdAt"]
+        map_id[e] = element["_id"]
+    });
+    //console.log(collectids)
+  });
+  var temp2 = await Item.find({ '_id': { $in: collectids } });
+  var resp =[]
+  console.log(map_date)
+  console.log(map_id)
+  res.status(200).json({"temp2":temp2, "map_date":map_date, "map_id":map_id})
 }

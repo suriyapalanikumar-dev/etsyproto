@@ -71,6 +71,8 @@ app.get("/fetchCart",passport.authenticate('jwt',{session: false}),itemctrl.geta
 app.post("/deleteCart",passport.authenticate('jwt',{session: false}),itemctrl.deleteCart)
 app.post("/saveCart",passport.authenticate('jwt',{session: false}),itemctrl.saveCart)
 app.post("/saveDesc",passport.authenticate('jwt',{session: false}),itemctrl.saveDesc)
+app.post("/proceedCheckout",passport.authenticate('jwt',{session: false}),itemctrl.checkout)
+app.post("/mypurchases", passport.authenticate('jwt',{session: false}),itemctrl.purchaseitems)
 //server listening 
 app.listen(process.env.PORT || 3000, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
