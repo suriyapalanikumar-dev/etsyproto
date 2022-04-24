@@ -15,31 +15,23 @@ import {
 import noimage from "../../images/noimage.png";
 
 const {Search} = Input;
-const Fav = () =>{
+const SearchPage = () =>{
     const dispatch = useDispatch();
     const loguser = useSelector(authenticateUser)
     const [itemsall, setItemsAll] = useState([])
     const [srcdp, setSrcdp] = useState(noimage)
     useEffect(() => {
-        axios.get(process.env.REACT_APP_SERVER + "/getFavorite",{headers: {"Authorization" : `Bearer ${loguser.token}`} })
+        axios.post(process.env.REACT_APP_SERVER + "/searchResults",{"value":loguser.search} )
         .then(response => {
-          console.log(response)
-          if(typeof response.data=="string")
+          //console.log(response.data)
+          if(response.data.length>0)
           {
-            alert("No Favorites Yet")
+            setItemsAll(response.data)
           }
           else{
-            //alert("Object Check")
-            if(response.data["dp"]=="")
-            {
-              setSrcdp(noimage)
-            }
-            else{
-              setSrcdp(process.env.REACT_APP_SERVER + "/image/"+response.data["dp"])
-            }
-
-            setItemsAll(response.data.temp1)
+            alert("No Search Results")
           }
+          
         })
         .catch(function (err) {
           alert(err)
@@ -51,24 +43,9 @@ const Fav = () =>{
         <div>
         <Navbar/>
         <div  style={{marginTop:"2%"}}>
-          <Row>
-            <Col span={3}>
-            <Card
-            style={{ width: "50%", height: "10%", marginLeft:"25%"}}
-            cover={<img alt="example" src={srcdp} style={{borderRadius:"100px"}}/>}
-            >
-            </Card>
-            </Col>
-            <Col span={10}>
-            <h2><b>Hi {loguser.username}</b></h2>
-            </Col>
-          </Row>
-
-        
         <br/>
-        <div >
-        <h2><b>Your Favorites!</b></h2>
-        <Search placeholder="search.."  style={{ width: 200 }} />
+        <h2><b>Results</b></h2>
+        {/* <Search placeholder="search.."  style={{ width: 200 }} /> */}
         <div style={{ marginTop: "2%", width: "100%", height: "50%", float: "left", paddingLeft:"2px" }}>
           {/* <h2><b> Collection Preview</b></h2> */}
 
@@ -90,23 +67,20 @@ const Fav = () =>{
                     </Col>
                     <Col span={3}>
                       {
-                        <HeartFilled  />
+                        <HeartOutlined  />
                       }
                     </Col>
                   </Row>
                 </div>
                 <p><b><span>{loguser.dollar}</span><span> {element.price} </span></b></p>
-                <Button danger>Delete</Button>
               </Card>
             </Col>)}
           </Row>
           </div>
-        </div>
-        
         </div>
         </div>
         
     )
 }
 
-export default Fav;
+export default SearchPage;

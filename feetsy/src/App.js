@@ -19,6 +19,7 @@ import Example from './components/Example.js/Example';
 import UserProfile from './components/UserProfile.js/UserProfile';
 import Fav from './components/Favorites/Fav';
 import SearchInitial from './components/Extras/SearchInitial';
+import SearchPage from './components/Search/Search'
 import SearchInitialMobile from './components/Extras/SearchInitialMobile';
 import SearchOverview from './components/SummaryResult/summaryresult';
 import SearchOverviewMobile from './components/Extras/SearchOverviewMobile';
@@ -43,7 +44,7 @@ function App() {
     <Route path="/cart" element={<Cart/>}/>
     <Route path="/example" element={<Example/>}/>
     <Route path="/profile" element={<UserProfile/>}/>
-    <Route path="/searchoverview" element={<SearchInitial/>}/>
+    <Route path="/searchoverview" element={<SearchPage/>}/>
     <Route path="/searchoverrview" element={<SearchInitialMobile/>}/>
     <Route path="/summaryoverview" element={<SearchOverview/>}/>
     <Route path="/oositem" element={<SearchOverviewoos/>}/>

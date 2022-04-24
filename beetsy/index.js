@@ -64,6 +64,7 @@ app.get("/displayItems", itemctrl.getallItems)
 app.post("/makeFavorite",passport.authenticate('jwt',{session: false}), itemctrl.setFavorite)
 app.post("/deleteFavorite", passport.authenticate('jwt',{session: false}),itemctrl.removeFavorite)
 app.get("/getFavorite", passport.authenticate('jwt',{session: false}),itemctrl.fetchFavorite)
+app.post("/searchResults", itemctrl.fetchSearch)
 
 
 

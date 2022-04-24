@@ -10,7 +10,7 @@ import {
 
 import {Navigate} from 'react-router-dom'; 
 import { useDispatch,useSelector } from 'react-redux';
-import { authenticateUser, login, logout } from '../../features/userSlice';
+import { authenticateUser, login, logout, searchCriteria } from '../../features/userSlice';
 const { Search } = Input;
 
 const Navbar  = () =>
@@ -21,7 +21,7 @@ const Navbar  = () =>
     const [isFavoriteEnabled, setisFavoritenabled] = useState(false)
     const [isCartEnabled, setCartEnabled] = useState(false)
     const [isLoggedOut, setLogout] = useState(false)
-    const [isFrame, setisFrame] = useState(null)
+    const [isFrame, setisFrame] = useState(false)
     const [isProfilePage, setProfilePage] = useState(false)
     const [isReturn,setReturn] = useState(false)
     const [myPurchase, setPurchasePage] =useState(false)
@@ -81,22 +81,30 @@ const Navbar  = () =>
     }
 
     const previewOverview = (value) =>{
-        if(value=='Frame'){
-            setisFrame("Frame")
-        }
-        else{
-            setisFrame("Mobile")
-        }
+        //alert(value)
+        let data = {
+            "username" : loguser.username,
+            "userid" : loguser.userid,
+            "token":loguser.token,
+            "isLoggedIn":loguser.isLoggedIn,
+            "email":loguser.email,
+            "dollar":loguser.dollar,
+            "search":value
+          }
+        dispatch(searchCriteria(
+            data
+        ))
+        setisFrame(true)
     }
 
-    if(isFrame=="Frame")
+    if(isFrame)
     {
         return <Navigate replace to="/searchoverview"/>
     }
-    if(isFrame=="Mobile")
-    {
-        return <Navigate replace to="/searchoverrview"/>
-    }
+    // if(isFrame=="Mobile")
+    // {
+    //     return <Navigate replace to="/searchoverrview"/>
+    // }
 
 
     if(isProfilePage)

@@ -166,3 +166,25 @@ module.exports.fetchFavorite = async(req, res)=>{
     res.status(500).json(err)
   }
 }
+
+module.exports.fetchSearch = async(req, res) =>{
+  try{
+    const {value} = req.body
+    const resp = []
+    const val = value.toLowerCase()
+    var temp1 = await Item.find({});
+    //console.log(temp1)
+    temp1.forEach(element => {
+      if(element["itemname"].toLowerCase().includes(val))
+      {
+        resp.push(element)
+        console.log(resp)
+      }
+    });
+    //console.log(resp)
+    res.status(200).json(resp)
+  }
+  catch(err){
+
+  }
+}
