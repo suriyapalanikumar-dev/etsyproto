@@ -45,6 +45,15 @@ const UserSchema = new mongoose.Schema({
     cart:{
         type:[String],
     },
+    gift:{
+        type:[Number],
+    },
+    giftdesc:{
+        type:[String],
+    },
+    count:{
+        type:[Number],
+    },
     createdAt:{
         type: Date,
         default:Date.now

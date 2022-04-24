@@ -17,10 +17,16 @@ const ItemSchema = new mongoose.Schema({
     price : {type:Number,default:0},
     shopname : {type:String,default:''},
     isFavorite:{type:String, default:'No'},
+    itemsold:{
+        type: Number,
+        default:0
+    },
     createdAt:{
         type: Date,
         default:Date.now
     }
 })
+
+
 
 module.exports = mongoose.model('Item',ItemSchema)

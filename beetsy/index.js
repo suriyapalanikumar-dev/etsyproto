@@ -67,6 +67,10 @@ app.get("/getFavorite", passport.authenticate('jwt',{session: false}),itemctrl.f
 app.post("/searchResults", itemctrl.fetchSearch)
 app.post("/summaryItem", itemctrl.summaryItem)
 app.post("/addCart",passport.authenticate('jwt',{session: false}),itemctrl.addToCart)
+app.get("/fetchCart",passport.authenticate('jwt',{session: false}),itemctrl.getallCart)
+app.post("/deleteCart",passport.authenticate('jwt',{session: false}),itemctrl.deleteCart)
+app.post("/saveCart",passport.authenticate('jwt',{session: false}),itemctrl.saveCart)
+app.post("/saveDesc",passport.authenticate('jwt',{session: false}),itemctrl.saveDesc)
 //server listening 
 app.listen(process.env.PORT || 3000, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);

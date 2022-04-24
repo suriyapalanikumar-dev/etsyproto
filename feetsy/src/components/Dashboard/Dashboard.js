@@ -200,8 +200,9 @@ const Dashboard = () => {
       "itemid" : e
     }
     dispatch(
-      itemSelect(data)
-    )
+        itemSelect(data)
+      )
+
     setNavigateOverview(true)
   }
 

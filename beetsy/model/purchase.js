@@ -7,6 +7,13 @@ const PurchaseSchema = new mongoose.Schema({
     gift:{
         type:[String]
     },
+    quantity:{
+        type:[String]
+    },
+    price:{
+        type:[String]
+    },
+    totalAmount:Number, 
     createdAt:{
         type: Date,
         default:Date.now

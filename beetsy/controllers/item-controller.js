@@ -206,6 +206,113 @@ module.exports.summaryItem = async(req,res) =>{
   }
 }
 
+
 module.exports.addToCart = async(req,res) =>{
-  const {itemid} = req.body 
+  const {itemid, sellvalue} = req.body 
+  var authorization = req.headers.authorization.split(' ')[1],
+  decoded;
+  decoded = jwt.verify(authorization, 'TOP_SECRET');
+  var temp = await User.findOne({"_id":decoded.sub})
+  if(temp){
+    var temp1 =await Item.findOne({"_id":itemid})
+    var t = temp1["itemsold"]+sellvalue
+    if(t>temp1["itemcount"])
+    {
+      res.status(200).json("Item is not in stock for the selected quantity")
+    }
+    else{
+    if(!temp["cart"].includes(itemid))
+    {
+      temp["cart"].push(itemid)
+      temp["count"].push(sellvalue)
+      temp["gift"].push(0)
+      temp["giftdesc"].push("")
+      temp.save()
+    }
+      var temp2 = await Item.findOneAndUpdate({"_id":itemid},{"itemsold":t})
+      res.status(200).json("Items added to Cart")
+    }
+
+  }
+  else{
+    res.status(500).json("Cannot add items to cart")
+  }
+}
+
+module.exports.getallCart = async(req, res) =>{
+  var authorization = req.headers.authorization.split(' ')[1],
+  decoded;
+  decoded = jwt.verify(authorization, 'TOP_SECRET');
+  var temp = await User.findOne({"_id":decoded.sub})
+  var temp1 = await Item.find({ '_id': { $in: temp["cart"] } });
+  res.status(200).json(temp1)
+}
+
+module.exports.deleteCart = async(req, res) =>{
+  const {itemid} = req.body
+  var authorization = req.headers.authorization.split(' ')[1],
+  decoded;
+  decoded = jwt.verify(authorization, 'TOP_SECRET');
+  var temp = await User.findOne({"_id":decoded.sub})
+  var aIndex = temp["cart"].indexOf(itemid);
+  if (aIndex !== -1) {
+    temp["cart"].splice(aIndex, 1);
+  }
+  console.log(temp["cart"])
+  if (aIndex !== -1) {
+    temp["count"].splice(aIndex, 1);
+    temp["gift"].splice(aIndex, 1);
+    temp["giftdesc"].splice(aIndex, 1);
+  }
+  console.log(temp["cart"])
+  console.log(temp["count"])
+  var temp1 = await User.findOneAndUpdate({"_id":decoded.sub},{"cart":temp["cart"],"count":temp["count"],"gift":temp["gift"],"giftdesc":temp["giftdesc"]})
+  var temp2 = await Item.find({ '_id': { $in: temp["cart"] } });
+  res.status(200).json(temp2)
+}
+
+module.exports.saveCart = async(req, res) =>{
+  const {itemid, sellvalue} = req.body
+  var authorization = req.headers.authorization.split(' ')[1],
+  decoded;
+  decoded = jwt.verify(authorization, 'TOP_SECRET');
+  var temp = await User.findOne({"_id":decoded.sub})
+  if(temp){
+    var temp1 =await Item.findOne({"_id":itemid})
+    var t = temp1["itemsold"]+sellvalue
+    if(t>temp1["itemcount"])
+    {
+      res.status(200).json("Item is not in stock for the selected quantity")
+    }
+    else{
+      var aIndex = temp["cart"].indexOf(itemid);
+      temp["count"][aIndex] = sellvalue
+      temp.save()
+      console.log(temp)
+      var temp2 = await Item.findOneAndUpdate({"_id":itemid},{"itemsold":t})
+      res.status(200).json(temp2)
+    }
+  }
+  else{
+    res.status(500).json("Cannot add items to cart")
+  }
+}
+
+module.exports.saveDesc = async(req, res) =>{
+  const {itemid, sellvalue} = req.body
+  var authorization = req.headers.authorization.split(' ')[1],
+  decoded;
+  decoded = jwt.verify(authorization, 'TOP_SECRET');
+  var temp = await User.findOne({"_id":decoded.sub})
+  if(temp){
+      var aIndex = temp["cart"].indexOf(itemid);
+      temp["giftdesc"][aIndex] = sellvalue
+      temp.save()
+      //var temp2 = await Item.findOneAndUpdate({"_id":itemid},{"itemsold":t})
+      res.status(200).json("Description Updated ")
+    }
+  
+  else{
+    res.status(500).json("Cannot add gift desc to cart")
+  }
 }

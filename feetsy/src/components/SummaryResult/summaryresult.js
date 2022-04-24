@@ -45,6 +45,14 @@ const SearchOverview = () =>{
       })
       
   }, []);
+
+    const additemtocart = (e) =>{
+      console.log(quantity)
+      axios.post(process.env.REACT_APP_SERVER+'/addCart', {'itemid':loguser.itemid,"sellvalue":quantity}, { headers: {"Authorization" : `Bearer ${loguser.token}`} })
+      .then(response=>{
+          alert(response.data)
+      })
+    }
     const navigateShop = (e) =>{
       setns(true)
     }
@@ -69,14 +77,14 @@ const SearchOverview = () =>{
     <label>Select Quantity: </label>
     <InputNumber min={0} max={salescount} defaultValue={0}  onChange={(e)=>setQuantity(e)} />
     <h2>{loguser.dollar} {price}</h2>
-    <Button type="primary" size="large" onClick={(e)=>alert("Added to Cart")}>Add to Cart</Button>
+    <Button type="primary" size="large" onClick={(e)=>additemtocart(e)}>Add to Cart</Button>
     <br/>
     <br/>
     <Button type="primary" size="large" onDoubleClick={(e)=>alert("Order Placed. Please refer mypurchase page for more details")}>Proceed to check out</Button>
     </div>
     </Col>
     </Row>
-       
+    
     </div>
     )
 }
