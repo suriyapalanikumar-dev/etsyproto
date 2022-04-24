@@ -39,6 +39,12 @@ const UserSchema = new mongoose.Schema({
     favorites:{
         type:[String],
     },
+    purchases:{
+        type:[String],
+    },
+    cart:{
+        type:[String],
+    },
     createdAt:{
         type: Date,
         default:Date.now

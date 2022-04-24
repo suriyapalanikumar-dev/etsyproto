@@ -188,3 +188,24 @@ module.exports.fetchSearch = async(req, res) =>{
 
   }
 }
+
+module.exports.summaryItem = async(req,res) =>{
+  const {itemid
+    } = req.body
+  var temp = await Item.findOne({"_id":itemid})
+  if(!temp)
+  {
+    res.status(500).json("Please enter an existing item")
+  }
+  if(temp)
+  {
+     res.status(200).json(temp)
+  }
+  else{
+    res.status(500).json("No such items")
+  }
+}
+
+module.exports.addToCart = async(req,res) =>{
+  const {itemid} = req.body 
+}

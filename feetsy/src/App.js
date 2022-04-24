@@ -32,7 +32,7 @@ import ShoppDisplay from './components/Extras/ShopDisplay';
 function App() {
   return (
     <div className="App">
-    <Router>
+    <Router>  
     <Routes>
     <Route exact path="/" element={<Dashboard/>} />
     <Route path="/sell" element={<CheckName/>} />
@@ -45,9 +45,7 @@ function App() {
     <Route path="/example" element={<Example/>}/>
     <Route path="/profile" element={<UserProfile/>}/>
     <Route path="/searchoverview" element={<SearchPage/>}/>
-    <Route path="/searchoverrview" element={<SearchInitialMobile/>}/>
     <Route path="/summaryoverview" element={<SearchOverview/>}/>
-    <Route path="/oositem" element={<SearchOverviewoos/>}/>
     <Route path="/purchase" element={<Purchase/>}/>
     <Route path="/shoppdetails" element={<ShoppDisplay/>}/>
     </Routes>

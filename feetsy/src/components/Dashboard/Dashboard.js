@@ -190,6 +190,18 @@ const Dashboard = () => {
   }
 
   const displayItemdetails = (e)=>{
+    let data = {
+      "username" : loguser.username,
+      "userid" : loguser.userid,
+      "token":loguser.token,
+      "email":loguser.email,
+      "isLoggedIn":loguser.isLoggedIn,
+      "dollar":loguser.dollar,
+      "itemid" : e
+    }
+    dispatch(
+      itemSelect(data)
+    )
     setNavigateOverview(true)
   }
 
@@ -266,9 +278,7 @@ const Dashboard = () => {
               <Card
                 hoverable
                 style={{ width: "75%", height: "50%" }}
-                cover={<img alt="example" src={process.env.REACT_APP_SERVER+"/image/"+element.itemphoto} />}
-                onClick = {(e)=>displayItemdetails(element._id)}
-                
+                cover={<img alt="example" src={process.env.REACT_APP_SERVER+"/image/"+element.itemphoto} onClick = {(e)=>displayItemdetails(element._id)}/>}
               >
                 <div>
                   <Row>
