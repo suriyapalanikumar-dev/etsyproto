@@ -153,9 +153,9 @@ module.exports.fetchFavorite = async(req, res)=>{
     console.log(temp)
     if(temp["favorites"].length>0)
     {
-      //console.log("jdk")
+      console.log(temp)
       var temp1 = await Item.find({ '_id': { $in: temp["favorites"] } });
-      res.status(200).json({temp1})
+      res.status(200).json({temp1,"dp":temp["profileUrl"]})
     }
     else{
       res.status(200).json("No favorites")
