@@ -39,6 +39,24 @@ const SearchPage = () =>{
         })
         
     }, []);
+
+    const makeFavorite = (e) =>{
+      if(!loguser)
+      {
+        alert("Please log in to make favorites")
+      }
+      else{
+        //console.log(loguser.token)
+        axios.post(process.env.REACT_APP_SERVER + "/makeFavorite",{"itemid":e},{headers: {"Authorization" : `Bearer ${loguser.token}`} })
+        .then(response => {
+          alert("Marked as Favorite")
+        })
+        .catch(function (err) {
+          alert(err)
+          console.log(err)
+        })
+      }
+    }
     return (
         <div>
         <Navbar/>
@@ -67,7 +85,7 @@ const SearchPage = () =>{
                     </Col>
                     <Col span={3}>
                       {
-                        <HeartOutlined  />
+                        <HeartOutlined onClick={(e)=>makeFavorite(element._id)}  />
                       }
                     </Col>
                   </Row>
