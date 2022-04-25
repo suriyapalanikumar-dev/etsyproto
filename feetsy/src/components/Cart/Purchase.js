@@ -20,22 +20,22 @@ const Purchase = () =>
     const [purchased, setpurchased] = useState([])
     const [pval, setpval] = useState([])
     const [currentp, setp] = useState(5)
-    const val = [
-        {
-            "createdAt": "2022-04-24T18:52:20.198Z",
-            "isFavorite": "No",
-            "itemcategory": "Jewellery",
-            "itemcount": 5,
-            "itemdesc": "Gold Jewellery with matte finish",
-            "itemname": "Necklace",
-            "itemphoto": "1650826336179-necklace.jpg",
-            "itemsold": 3,
-            "price": 908.99,
-            "shopname": "dummyshop",
-            "orderid":"6265bbde1b526e06768a79c2",
-            "date":"2022-04-24T21:06:38.433Z"
-        }
-    ]
+    // const val = [
+    //     {
+    //         "createdAt": "2022-04-24T18:52:20.198Z",
+    //         "isFavorite": "No",
+    //         "itemcategory": "Jewellery",
+    //         "itemcount": 5,
+    //         "itemdesc": "Gold Jewellery with matte finish",
+    //         "itemname": "Necklace",
+    //         "itemphoto": "1650826336179-necklace.jpg",
+    //         "itemsold": 3,
+    //         "price": 908.99,
+    //         "shopname": "dummyshop",
+    //         "orderid":"6265bbde1b526e06768a79c2",
+    //         "date":"2022-04-24T21:06:38.433Z"
+    //     }
+    // ]
     
     useEffect(() => {
         axios.post(process.env.REACT_APP_SERVER + "/mypurchases",{},{ headers: {"Authorization" : `Bearer ${loguser.token}`} })
@@ -46,6 +46,7 @@ const Purchase = () =>
               var t = element
               t.orderid = response.data["map_id"][element["_id"]]
               t.date = response.data["map_date"][element["_id"]]
+              t.gift = response.data["map_gift"][element["_id"]]
               temp.push(t)
               
           });
@@ -65,10 +66,12 @@ const Purchase = () =>
             setpval(purchased)
         }
         else{
-            let ar2 = purchased.splice(0,value)
+            let tt = purchased.slice()
+            let ar2 = tt.splice(0,value)
             setpval(ar2)
         }
     }
+
       return (  
         <div>  
             {console.log(pval)}
@@ -76,7 +79,7 @@ const Purchase = () =>
             <div>
                 <h2><b>Your Purchases!</b></h2>
                 <label><b>Select Pagination: </b> </label>
-                <Select style={{width:"100px", marginLeft:"3px"}} defaultValue="Page 5" onChange={(e)=>testChange(e)}>
+                <Select style={{width:"100px", marginLeft:"3px"}} defaultValue="Page 0" onChange={(e)=>testChange(e)}>
                     {[1,2,3,4,5,6,7,8,9,10].map((element)=>
                        
                         <Option key={element} value={element}>Page {element}</Option>
@@ -111,6 +114,9 @@ const Purchase = () =>
                     </Col>
                     <Col span={24}>
                     <p align="center" style={{fontSize:"15px"}}>Price each:<b>{element.price}</b></p>
+                    </Col>
+                    <Col span={24}>
+                   {element.gift!=""? <p align="center" style={{fontSize:"15px"}}>Gift Description:<b>{element.gift}</b></p>:null}
                     </Col>
                   </Row>
                 </div>

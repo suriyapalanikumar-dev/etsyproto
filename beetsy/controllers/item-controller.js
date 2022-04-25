@@ -354,12 +354,14 @@ module.exports.purchaseitems = async(req, res) =>{
   var collectids = []
   var map_date = {}
   var map_id = {}
+  var map_gift = {}
   temp1.forEach(element => {
     
     collectids = [...collectids, ...element["itemids"]]
-    element["itemids"].forEach(e => {
+    element["itemids"].forEach((e,i) => {
         map_date[e] = element["createdAt"]
         map_id[e] = element["_id"]
+        map_gift[e] = element["gift"][i]
     });
     //console.log(collectids)
   });
@@ -367,5 +369,5 @@ module.exports.purchaseitems = async(req, res) =>{
   var resp =[]
   console.log(map_date)
   console.log(map_id)
-  res.status(200).json({"temp2":temp2, "map_date":map_date, "map_id":map_id})
+  res.status(200).json({"temp2":temp2, "map_date":map_date, "map_id":map_id, "map_gift":map_gift})
 }

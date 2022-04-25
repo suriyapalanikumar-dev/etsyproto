@@ -50,6 +50,7 @@ const UserSchema = new mongoose.Schema({
     },
     giftdesc:{
         type:[String],
+        default:["No gift message"]
     },
     count:{
         type:[Number],
