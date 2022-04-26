@@ -4,7 +4,7 @@ const User = require("../model/user")
 const jwt = require("jsonwebtoken");
 const Purchase = require("../model/purchase")
 
-module.exports.enrollItem = (req, res) =>{
+module.exports.enrollItem = (msg, callback) =>{
   try{
     const {itemname, 
       itemcount,
@@ -54,7 +54,7 @@ module.exports.fetchItem = async(req,res) =>{
   }
 }
 
-module.exports.checkout = async(req, res)=>{
+module.exports.checkout = async(msg,callback)=>{
   var authorization = req.headers.authorization.split(' ')[1],
   decoded;
   decoded = jwt.verify(authorization, 'TOP_SECRET');
@@ -114,7 +114,7 @@ module.exports.updateItem = async(req,res) =>{
   }
 }
 
-module.exports.getallItems = async(req, res) =>{
+module.exports.getallItems = async(msg,callback) =>{
   try{
     var temp = await Item.find({},{"_id":1, "itemname":1, "isFavorite":1, "price":1,"itemphoto":1}).sort([['createdAt', -1]])
     res.status(200).json(temp)
@@ -125,7 +125,7 @@ module.exports.getallItems = async(req, res) =>{
   }
 }
 
-module.exports.setFavorite = async(req, res)=>{
+module.exports.setFavorite = async(msg,callback)=>{
   try{
     const {itemid} = req.body
     var authorization = req.headers.authorization.split(' ')[1],
@@ -148,7 +148,7 @@ module.exports.setFavorite = async(req, res)=>{
   }
 }
 
-module.exports.removeFavorite = async(req, res)=>{
+module.exports.removeFavorite = async(msg,callback)=>{
   try{
     const {itemid} = req.body
     var authorization = req.headers.authorization.split(' ')[1],
@@ -170,7 +170,7 @@ module.exports.removeFavorite = async(req, res)=>{
 }
 
 
-module.exports.fetchFavorite = async(req, res)=>{
+module.exports.fetchFavorite = async(msg,callback)=>{
   try{
 
     var authorization = req.headers.authorization.split(' ')[1],
@@ -194,7 +194,7 @@ module.exports.fetchFavorite = async(req, res)=>{
   }
 }
 
-module.exports.fetchSearch = async(req, res) =>{
+module.exports.fetchSearch = async(msg,callback) =>{
   try{
     const {value} = req.body
     const resp = []
@@ -266,7 +266,7 @@ module.exports.addToCart = async(req,res) =>{
   }
 }
 
-module.exports.getallCart = async(req, res) =>{
+module.exports.getallCart = async(msg,callback) =>{
   var authorization = req.headers.authorization.split(' ')[1],
   decoded;
   decoded = jwt.verify(authorization, 'TOP_SECRET');
@@ -275,7 +275,7 @@ module.exports.getallCart = async(req, res) =>{
   res.status(200).json(temp1)
 }
 
-module.exports.deleteCart = async(req, res) =>{
+module.exports.deleteCart = async(msg,callback) =>{
   const {itemid} = req.body
   var authorization = req.headers.authorization.split(' ')[1],
   decoded;
@@ -298,7 +298,7 @@ module.exports.deleteCart = async(req, res) =>{
   res.status(200).json(temp2)
 }
 
-module.exports.saveCart = async(req, res) =>{
+module.exports.saveCart = async(msg,callback) =>{
   const {itemid, sellvalue} = req.body
   var authorization = req.headers.authorization.split(' ')[1],
   decoded;
@@ -325,7 +325,7 @@ module.exports.saveCart = async(req, res) =>{
   }
 }
 
-module.exports.saveDesc = async(req, res) =>{
+module.exports.saveDesc = async(msg,callback) =>{
   const {itemid, sellvalue} = req.body
   var authorization = req.headers.authorization.split(' ')[1],
   decoded;
@@ -344,7 +344,7 @@ module.exports.saveDesc = async(req, res) =>{
   }
 }
 
-module.exports.purchaseitems = async(req, res) =>{
+module.exports.purchaseitems = async(msg,callback) =>{
   // const {pagevalue} = req.body
   var authorization = req.headers.authorization.split(' ')[1],
   decoded;

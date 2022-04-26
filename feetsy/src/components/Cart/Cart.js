@@ -141,7 +141,7 @@ const Cart = () =>
             
             </div>     
             <br/>
-            <h4><b>Your total order value is {ordervalue}</b></h4>
+            {/* <h4><b>Your total order value is {ordervalue}</b></h4> */}
             <Button size="large" type="primary" onClick={(e)=>checkout(e)}>Proceed to Checkout</Button>           
             </div>       
     )  

@@ -2,7 +2,7 @@ const connection = require("../config/db")
 const jwt = require("jsonwebtoken");
 const Shop = require("../model/shop");
 
-module.exports.isshopnameavailabile = async(req, res) =>{
+module.exports.isshopnameavailabile = async(msg,callback) =>{
     const {shopname} = req.body
     var authorization = req.headers.authorization.split(' ')[1],
     decoded;
@@ -10,16 +10,12 @@ module.exports.isshopnameavailabile = async(req, res) =>{
     let foundShop = await Shop.findOne({"shopname": shopname });
     if(!foundShop)
     {
-      res.status(200).json({
+      callback(null,{
         data: "Available",
         message: 'Shop Name'
       })
     }
-    else{
-      res.status(500).json({
-        data: "Not Available",
-      })
-    }
+
 }
 
 module.exports.createshopname = (req, res) =>{
@@ -31,37 +27,31 @@ module.exports.createshopname = (req, res) =>{
     newShop.save()
     if(newShop)
     {
-      res.status(200).json({
+      callback(null,{
         data: "Shop Name Created"
       })
     }
-    else{
-      res.status(500).json({
-        data: "Shop cannot be created"
-      })
-    }
+
 }
 
-module.exports.updateshopimage = async(req, res) =>{
+module.exports.updateshopimage = async(msg,callback) =>{
   try{
     const {imgname,shopname} = req.body
     var temp = await Shop.findOneAndUpdate({"shopname":shopname}, {"shopphoto":imgname})
     if(temp)
     {
-      res.status(200).json("Profile details updated")
+      callback(null,"Profile details updated")
     }
-    else{
-      res.status(500).json("Error in Updating profile details")
-    }
+
   }
   catch(error)
   {
-    res.status(500).json({"error":error})
+    console.log({"error":error})
   }
 }
 
 
-module.exports.getshopdetails = async(req, res) =>{
+module.exports.getshopdetails = async(msg,callback) =>{
   try{
     const {shopname} = req.body
     var isowner = false
@@ -76,7 +66,7 @@ module.exports.getshopdetails = async(req, res) =>{
     {
       isowner = true
     }
-    res.status(200).json({"shop":foundShop,"isOwner":isowner})
+    callback(null,{"shop":foundShop,"isOwner":isowner})
   }
   catch(err)
   {
@@ -94,11 +84,11 @@ module.exports.getShopImage = (req, res) =>{
     connection.query(sql, values, function (error, results, fields) {
         if (error) {
           console.log(error);
-          res.status(500).json({
+          callback({
             message: error.sqlMessage
           })
         } else {
-          res.status(200).json({
+          callback(null,{
             data: results,
             message: 'Image name retrieved Sucessfully'
           })

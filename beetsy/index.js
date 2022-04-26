@@ -1,5 +1,3 @@
-require("dotenv").config();
-var express = require('express');
 var bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 var cors = require('cors');
@@ -7,11 +5,7 @@ var auth = require("./middleware/auth.js")
 const jwt = require('jsonwebtoken');
 const passport = require('passport')
 const InitiateMongoServer = require("./config/db")
-InitiateMongoServer()
-require('./config/passport')
-
-
-
+var kafka = require('./kafka/client');
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -44,35 +38,623 @@ const profilectrl = require('./controllers/profile-controller.js')
 const shopctrl = require('./controllers/shop-controller.js')
 const itemctrl = require('./controllers/item-controller.js')
 
-app.post("/register", authenticatectrl.registeruser)
-app.post("/login", authenticatectrl.loginuser)
-app.get("/secret", passport.authenticate('jwt',{session: false}), authenticatectrl.secretuser)
-app.post("/uploadprofiledp",upload.single('profile-file'), imgctrl.uploadpic)
-app.post("/updateprofileimgdb", passport.authenticate('jwt',{session: false}),profilectrl.updateprofileimage)
-app.get("/image/:key",imgctrl.retrieveImg)
-app.post("/updateProfile", passport.authenticate('jwt',{session: false}),authenticatectrl.updateUserdetails)
-app.post("/checkshopname", passport.authenticate('jwt',{session: false}),shopctrl.isshopnameavailabile)
-app.post("/createshopdetails", passport.authenticate('jwt',{session: false}), shopctrl.createshopname)
-app.post("/displayshopdetails", passport.authenticate('jwt',{session: false}),shopctrl.getshopdetails)
-app.post("/uploadshopdp",upload.single('profile-file'), imgctrl.uploadpic)
-app.post("/updateshopimgdb", shopctrl.updateshopimage)
-app.post("/additem",itemctrl.enrollItem)
-app.post("/uploaditemdp",upload.single('profile-file'), imgctrl.uploadpic)
-app.get("/getuniqueItems/:shopname", itemctrl.fetchItem)
-app.post("/editItem", itemctrl.updateItem)
-app.get("/displayItems", itemctrl.getallItems)
-app.post("/makeFavorite",passport.authenticate('jwt',{session: false}), itemctrl.setFavorite)
-app.post("/deleteFavorite", passport.authenticate('jwt',{session: false}),itemctrl.removeFavorite)
-app.get("/getFavorite", passport.authenticate('jwt',{session: false}),itemctrl.fetchFavorite)
-app.post("/searchResults", itemctrl.fetchSearch)
-app.post("/summaryItem", itemctrl.summaryItem)
-app.post("/addCart",passport.authenticate('jwt',{session: false}),itemctrl.addToCart)
-app.get("/fetchCart",passport.authenticate('jwt',{session: false}),itemctrl.getallCart)
-app.post("/deleteCart",passport.authenticate('jwt',{session: false}),itemctrl.deleteCart)
-app.post("/saveCart",passport.authenticate('jwt',{session: false}),itemctrl.saveCart)
-app.post("/saveDesc",passport.authenticate('jwt',{session: false}),itemctrl.saveDesc)
-app.post("/proceedCheckout",passport.authenticate('jwt',{session: false}),itemctrl.checkout)
-app.post("/mypurchases", passport.authenticate('jwt',{session: false}),itemctrl.purchaseitems)
+app.post("/register",  function(req, res){
+
+  kafka.make_request('register',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/login",  function(req, res){
+
+  kafka.make_request('login',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+//app.get("/secret", passport.authenticate('jwt',{session: false}), authenticatectrl.secretuser)
+app.post("/uploadprofiledp", function(req, res){
+
+  kafka.make_request('uploadprofiledp',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/updateprofileimgdb", passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('updateprofileimgdb',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.get("/image", function(req, res){
+
+  kafka.make_request('image',req.params, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/updateProfile", passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('updateProfile',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/checkshopname", passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('checkshopname',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/createshopdetails", passport.authenticate('jwt',{session: false}),  function(req, res){
+
+  kafka.make_request('createshopdetails',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/displayshopdetails", passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('displayshopdetails',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/uploadshopdp",upload.single('profile-file'),  function(req, res){
+
+  kafka.make_request('uploadshopdp',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/updateshopimgdb",  function(req, res){
+
+  kafka.make_request('updateshopimgdb',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/additem", function(req, res){
+
+  kafka.make_request('additem',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/uploaditemdp",upload.single('profile-file'),  function(req, res){
+
+  kafka.make_request('uploaditemdp',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.get("/getuniqueItems",  function(req, res){
+
+  kafka.make_request('getuniqueItems',req.params, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/editItem",  function(req, res){
+
+  kafka.make_request('editItem',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.get("/displayItems",  function(req, res){
+
+  kafka.make_request('displayItems',req.params, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/makeFavorite",passport.authenticate('jwt',{session: false}),  function(req, res){
+
+  kafka.make_request('makeFavorite',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/deleteFavorite", passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('deleteFavorite',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.get("/getFavorite", passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('getFavorite',req.params, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/searchResults",  function(req, res){
+
+  kafka.make_request('searchResults',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/summaryItem",  function(req, res){
+
+  kafka.make_request('summaryItem',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/addCart",passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('addCart',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.get("/fetchCart",passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('fetchCart',req.params, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/deleteCart",passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('deleteCart',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/saveCart",passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('saveCart',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/saveDesc",passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('saveDesc',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/proceedCheckout",passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('proceedCheckout',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
+app.post("/mypurchases", passport.authenticate('jwt',{session: false}), function(req, res){
+
+  kafka.make_request('mypurchases',req.body, function(err,results){
+      console.log('in result');
+      console.log(results);
+      if (err){
+          console.log("Inside err");
+          res.json({
+              status:"error",
+              msg:"System Error, Try Again."
+          })
+      }else{
+          console.log("Inside else");
+              res.json({
+                  "resp":results
+              });
+
+              res.end();
+          }
+      
+  });
+});
 //server listening 
 app.listen(process.env.PORT || 3000, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);

@@ -1,5 +1,5 @@
 const connection = require("../config/database.js")
-module.exports.dashboardFetch = (req, res) =>{
+module.exports.dashboardFetch = (msg,callback) =>{
     const {category} = req.body
     //console.log(req)
     const sql = `select * from dbetsy.Item where itemcategory=? and itemcount>0 limit 4`
