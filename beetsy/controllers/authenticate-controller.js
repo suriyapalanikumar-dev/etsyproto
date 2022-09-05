@@ -16,15 +16,15 @@ genToken = user => {
 }
 
 
-module.exports.secretuser = async(msg,callback) =>{
+module.exports.secretuser = async(req, res) =>{
   var authorization = req.headers.authorization.split(' ')[1],
             decoded;
   decoded = jwt.verify(authorization, 'TOP_SECRET');
   //console.log(decoded)
-  callback(null,"success")
+  res.status(200).json("success")
 }
                   
-module.exports.registeruser = async(msg,callback) =>{
+module.exports.registeruser = async(req, res) =>{
   const {name, email, password } = req.body;
   
   //Check If User Exists
@@ -38,10 +38,10 @@ module.exports.registeruser = async(msg,callback) =>{
   console.log(newUser)
   // Generate JWT token
   //const token = genToken(newUser)
-  callback(null,{newUser})
+  res.status(200).json({newUser})
 }
 
-module.exports.loginuser = async(msg,callback) =>{
+module.exports.loginuser = async(req, res) =>{
   const { email, password } = req.body;
   //Check If User Exists
   let foundUser = await User.findOne({ email });
@@ -53,11 +53,11 @@ module.exports.loginuser = async(msg,callback) =>{
     let token = genToken(foundUser)
     console.log(typeof foundUser)
     console.log(foundUser)
-    callback(null,{foundUser, "token":token})
+    res.status(200).json({foundUser, "token":token})
   }
 }
 
-module.exports.updateUserdetails = async(msg,callback) =>{
+module.exports.updateUserdetails = async(req, res) =>{
   const {address, city, state, zip, dob, phone, country} = req.body
   var authorization = req.headers.authorization.split(' ')[1],
   decoded;
@@ -66,7 +66,10 @@ module.exports.updateUserdetails = async(msg,callback) =>{
   var temp = await User.findOneAndUpdate({"_id":decoded.sub}, {"DOB":dob, "address":address,"state":state, "country":country, "city":city, "phone":phone})
   if(temp)
   {
-    callback(null,"Picture Updated")
+    res.status(200).json("Picture Updated")
+  }
+  else{
+    res.status(500).json("Error in Updating Picture details")
   }
 }
 
